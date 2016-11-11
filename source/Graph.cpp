@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <limits>
+#include <cmath>
 #include <iostream>
 
 typedef std::numeric_limits<double> D;
@@ -79,12 +80,20 @@ double Graph::getEdge(int source, int dest) const
 
 int Graph::order() const
 {
-	return 0;
+	return adjMatrix.size();
 }
 
 int Graph::size() const
 {
-	return 0;
+	int arcs = 0;
+	for (int i = 0; i < adjMatrix.size(); i++) {
+		for (int j = 0; j < adjMatrix.size(); j++) {
+			if (i != j && std::isfinite(adjMatrix[i][j])) {
+				arcs++;
+			}
+		}
+	}
+	return arcs;
 }
 
 void Graph::print() const
