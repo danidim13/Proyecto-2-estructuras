@@ -52,7 +52,7 @@ Recordar meter >> `typedef std::vector<vertex> Genoma` (pero esto iría en la cl
 
 - [x] Definir y documentar los métodos del Grafo (parámetros, return types, etc). __9/11__
 - [x] Implementar métodos para añadir vértices y aristas, `addVertex()` y `addEdge()`. __10/11__
-- [ ] Implementar métodos para comprobar la existencia de una arista entre dos nodos y obtener su peso, `isEdge()` y `getEdge()`.
+- [x] Implementar métodos para comprobar la existencia de una arista entre dos nodos y obtener su peso, `isEdge()` y `getEdge()`. __11/11__
 - [x] Implementar métodos de información: número de vértices/aristas, imprimir. __10/11__
 - [ ] Validar implementación.
 
