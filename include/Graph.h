@@ -60,7 +60,7 @@ class Graph {
 	 * @param dest Vértice destino.
 	 * @return True si existe.
 	 */
-	bool isArc(int source, int dest) const;
+	bool isEdge(int source, int dest) const;
 
 	/**
 	 * Obtiene el peso de la arista que va
@@ -69,7 +69,7 @@ class Graph {
 	 * @param dest Destino.
 	 * @Return Peso de la conexión.
 	 */
-	double getArc(int source, int dest) const;
+	double getEdge(int source, int dest) const;
 
         /**
          * Retorna el orden del grafo.
