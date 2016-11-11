@@ -65,17 +65,21 @@ bool Graph::addEdgeBidir(int source, int dest, double weight)
 
 std::vector<double> Graph::getNeighbors(int v) const
 {
-	return std::vector<double>();
+	return adjMatrix[v];
 }
 
 bool Graph::isEdge(int source, int dest) const
 {
+	if (source < (int)adjMatrix.size() && dest < (int)adjMatrix.size()) 
+		return std::isfinite(adjMatrix[source][dest]);
 	return false;
 }
 
 double Graph::getEdge(int source, int dest) const
 {
-	return 0;
+	if (source < (int)adjMatrix.size() && dest < (int)adjMatrix.size()) 
+		return adjMatrix[source][dest];
+	return D::infinity();
 }
 
 int Graph::order() const
@@ -86,8 +90,8 @@ int Graph::order() const
 int Graph::size() const
 {
 	int arcs = 0;
-	for (int i = 0; i < adjMatrix.size(); i++) {
-		for (int j = 0; j < adjMatrix.size(); j++) {
+	for (size_t i = 0; i < adjMatrix.size(); i++) {
+		for (size_t j = 0; j < adjMatrix.size(); j++) {
 			if (i != j && std::isfinite(adjMatrix[i][j])) {
 				arcs++;
 			}
