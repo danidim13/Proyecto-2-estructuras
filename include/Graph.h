@@ -32,13 +32,23 @@ class Graph {
 	int addVertex();
 
 	/**
-	 * Agrega una arista al grafo.
+	 * Agrega una arista dirigida al grafo.
 	 * @param source Vértice origen.
 	 * @param dest Vértice destino.
 	 * @param weight Peso de la arista.
 	 * @return True si la operación tiene éxito.
 	 */
 	bool addEdge(int source, int dest, double weight);
+
+	/**
+	 * Agrega una arista no dirigida al grafo.
+	 * Equivalente a invocar addEdge(source, dest, weight) addEdge(dest, source, weight).
+	 * @param source Vértice origen.
+	 * @param dest Vértice destino.
+	 * @param weight Peso de la arista.
+	 * @return True si la operación tiene éxito.
+	 */
+	bool addEdgeBidir(int source, int dest, double weight);
 	
 	/**
 	 * Retorna las conexiones de un vertice
