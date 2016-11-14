@@ -1,5 +1,5 @@
-#include "Graph"
-#include "Funtions.h"
+#include "Graph.h"
+#include "Functions.h"
 
 using namespace std; 
 
