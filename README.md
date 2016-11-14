@@ -54,19 +54,28 @@ Recordar meter >> `typedef std::vector<vertex> Genoma` (pero esto iría en la cl
 - [x] Implementar métodos para añadir vértices y aristas, `addVertex()` y `addEdge()`. __10/11__
 - [x] Implementar métodos para comprobar la existencia de una arista entre dos nodos y obtener su peso, `isEdge()` y `getEdge()`. __11/11__
 - [x] Implementar métodos de información: número de vértices/aristas, imprimir. __10/11__
-- [ ] Validar implementación.
+- [x] Validar implementación. __13/11__
+- [ ] Hacer Makefile con targets: all, clean, tests, run
+- [ ] Documentar funciones a implementar.
+- [ ] Implementar Constructor.
+- [ ] Implementar `primeraGeneracion()`.
+- [ ] Implementar `Crossover()`.
+- [ ] Implementar `Solve()`.
 
 ### Luis
 
-- [ ] Implementar método `esSolucion()`.
-- [ ] Implementar método `sumarTrayectorias()`.
-- [ ] Validar implementación.
+- [x] Implementar método `esSolucion()`. __13/11__
+- [x] Implementar método `sumarTrayectorias()`. __13/11__
+- [x] Validar implementación. __13/11__
+- [ ] Documentar funciones a implementar.
+- [ ] Implementar `Mutacion()`.
+- [ ] Implementar `SiguienteGeneracion()`.
+- [ ] Implementar `SeleccionNatural()`.
+
 
 ### Sin asignar
-- [ ] Hacer Makefile con targets: all, clean, tests, run
-- [ ] Definir y documentar los miembros y métodos de la clase GeneticSolver. Definir paramétros y return types de los métodos, etc.
-- [ ] Implementar y validar métodos definidos (expandir esta tarea una vez se sepa cuáles van a ser).
-- [ ] Definir estrategias de cruze para genomas (número de generaciones, probabilidad de cruze\mutacion, cantidad de padres...).
+- [x] Definir los miembros y métodos de la clase GeneticSolver. Definir paramétros y return types de los métodos, etc. __13/11__
+- [x] Definir estrategias de cruze para genomas (número de generaciones, probabilidad de cruze\mutacion, cantidad de padres...). __13/11__
 - [ ] Obtener complejidad teórica del algoritmo genético.
 - [ ] Definir pruebas para obtener la complejidad experimental. (Se puede reciclar la estructura del proyecto pasado!)
 - [ ] Obtener algoritmo Dijkstra de algún lado.
