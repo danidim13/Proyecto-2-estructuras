@@ -3,9 +3,10 @@
 
 #include <iostream>
 #include <vector>
+#include "Graph.h"
 
-bool esSolucion(std::vector<double> genoma);
+bool esSolucion(std::vector<int> genoma, Graph grafo);
 
-double sumarTrayectorias(std::vector<double> genoma, std::vector<std::vector<double>> adjMatrix);
+double sumarTrayectorias(std::vector<int> genoma, Graph grafo);
 
 #endif

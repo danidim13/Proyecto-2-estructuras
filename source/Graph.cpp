@@ -70,14 +70,14 @@ std::vector<double> Graph::getNeighbors(int v) const
 
 bool Graph::isEdge(int source, int dest) const
 {
-	if (source < (int)adjMatrix.size() && dest < (int)adjMatrix.size()) 
+	if (source < (int)adjMatrix.size() && dest < (int)adjMatrix.size())
 		return std::isfinite(adjMatrix[source][dest]);
 	return false;
 }
 
 double Graph::getEdge(int source, int dest) const
 {
-	if (source < (int)adjMatrix.size() && dest < (int)adjMatrix.size()) 
+	if (source < (int)adjMatrix.size() && dest < (int)adjMatrix.size())
 		return adjMatrix[source][dest];
 	return D::infinity();
 }

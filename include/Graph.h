@@ -14,7 +14,7 @@ class Graph {
         /**
          * Constructor que recibe el numero de vertices.
          * Reserva la memoria necesaria e inicializa
-         * la matriz de adyacencia con todos los 
+         * la matriz de adyacencia con todos los
          * vertices desconectados, es decir Xij = inf.
          */
         Graph(int nodes);
@@ -49,7 +49,7 @@ class Graph {
 	 * @return True si la operación tiene éxito.
 	 */
 	bool addEdgeBidir(int source, int dest, double weight);
-	
+
 	/**
 	 * Retorna las conexiones de un vertice
 	 * en forma de un vector de pesos a otros
@@ -95,7 +95,7 @@ class Graph {
 
         /**
          * Imprime la representacion del grafo.
-         * En este caso, imprime la matriz de 
+         * En este caso, imprime la matriz de
          * adyacencia.
          */
         void print() const;
