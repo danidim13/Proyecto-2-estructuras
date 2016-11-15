@@ -4,6 +4,7 @@
 #include "Graph.h"
 #include <vector>
 #include <list>
+#include <cmath>
 
 struct Genoma {
 	std::vector<int> genes;
@@ -42,6 +43,8 @@ class GeneticSolver {
     bool esSolucion(std::vector<int> genoma, Graph grafo);
 
     double sumarTrayectorias(std::vector<int> genoma, Graph grafo);
+
+
 };
 
 
