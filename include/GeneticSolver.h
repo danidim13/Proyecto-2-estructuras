@@ -32,10 +32,10 @@ class GeneticSolver {
 
 	private:
 
+		Graph *m_grafo;
 		int m_crossover;
 		int m_mutaciones;
 		int m_gen_limit;
-		Graph *m_grafo;
 
 		std::list<Genoma> genepool;
 		std::list<Genoma> superiores;

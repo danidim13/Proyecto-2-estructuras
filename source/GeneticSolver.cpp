@@ -1,6 +1,10 @@
 #include "GeneticSolver.h"
 
-GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, Graph *grafo){}
+GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, Graph *grafo):
+	m_grafo(grafo), m_crossover(p_crossover), m_mutaciones(p_mutaciones), m_gen_limit(gen_limit)
+{
+
+}
 
 GeneticSolver::~GeneticSolver(){}
 
