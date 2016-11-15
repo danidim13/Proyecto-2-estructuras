@@ -30,6 +30,7 @@ class GeneticSolver {
 		void solve(); // Daniel
 
 	private:
+
 		int m_crossover;
 		int m_mutaciones;
 		int m_gen_limit;
@@ -37,9 +38,13 @@ class GeneticSolver {
 
 		std::list<Genoma> genepool;
 		std::list<Genoma> superiores;
+
+    bool esSolucion(std::vector<int> genoma, Graph grafo);
+
+    double sumarTrayectorias(std::vector<int> genoma, Graph grafo);
 };
 
 
 
-		
+
 #endif
