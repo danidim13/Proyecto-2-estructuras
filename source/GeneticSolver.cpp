@@ -1,16 +1,23 @@
 #include "GeneticSolver.h"
+#include <chrono> 
 
 GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, Graph *grafo):
-	m_grafo(grafo), m_crossover(p_crossover), m_mutaciones(p_mutaciones), m_gen_limit(gen_limit)
+	m_grafo(grafo), m_crossover(p_crossover),
+	m_mutaciones(p_mutaciones), m_gen_limit(gen_limit),
+	Rng(std::chrono::system_clock::now().time_since_epoch().count()),
+	vertexDist(1, grafo->order() - 2)
 {
 
 }
 
-GeneticSolver::~GeneticSolver(){}
+GeneticSolver::~GeneticSolver()
+{
 
-Genoma GeneticSolver::crossover(Genoma g1, Genoma g2) const{}
+}
 
-Genoma GeneticSolver::mutacion(Genoma g) const {}
+//Genoma GeneticSolver::crossover(Genoma g1, Genoma g2) const{}
+;
+//Genoma GeneticSolver::mutacion(Genoma g) const {}
 
 void GeneticSolver::seleccionNatural(){}
 
@@ -18,11 +25,22 @@ void GeneticSolver::primeraGeneracion(){}
 
 void GeneticSolver::siguienteGeneracion(){}
 
-std::vector<Genoma> GeneticSolver::getSuperiores() const{}
+//std::vector<Genoma> GeneticSolver::getSuperiores() const{}
 
-int GeneticSolver::getGenCounter() const{}
+//int GeneticSolver::getGenCounter() const{}
 
 void GeneticSolver::solve(){}
+
+int GeneticSolver::randVert()
+{
+	return vertexDist(Rng);
+}
+
+int GeneticSolver::randPos(size_t size)
+{
+	std::uniform_int_distribution<int> dist(1, size-2);
+	return dist(Rng);
+}
 
 bool GeneticSolver::esSolucion(std::vector<int> genoma, Graph grafo){
 
@@ -47,3 +65,4 @@ double GeneticSolver::sumarTrayectorias(std::vector<int> genoma, Graph grafo){
     }
     return suma_pesos;
 }
+

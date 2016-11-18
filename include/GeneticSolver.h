@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 #include <cmath>
+#include <random>
 
 struct Genoma {
 	std::vector<int> genes;
@@ -30,6 +31,23 @@ class GeneticSolver {
 
 		void solve(); // Daniel
 
+		/**
+		 * Esta función retorna un vertice aleatorio que no
+		 * sea ni la fuente ni el destino. Efectivamente el rango
+		 * es [1 , (m_grafo->order()-2)].
+		 * @return El valor aleatorio generado.
+		 */
+		int randVert();
+
+		/**
+		 * Esta función retorna una posición aleatoria de un
+		 * vector de tamaño size, tal que no sea ni la primera
+		 * ni la ultima.
+		 * @param size Tamaño del vector.
+		 * @return Indíce dentro del rango [1, size-2].
+		 */
+		int randPos(size_t size);
+
 	private:
 
 		Graph *m_grafo;
@@ -40,9 +58,16 @@ class GeneticSolver {
 		std::list<Genoma> genepool;
 		std::list<Genoma> superiores;
 
-    bool esSolucion(std::vector<int> genoma, Graph grafo);
+		// Miembros para la generacion aleatoria
+		// Un generador
+		std::mt19937 Rng;
 
-    double sumarTrayectorias(std::vector<int> genoma, Graph grafo);
+		// Distribución para vertices
+		std::uniform_int_distribution<int> vertexDist;
+
+		bool esSolucion(std::vector<int> genoma, Graph grafo);
+
+		double sumarTrayectorias(std::vector<int> genoma, Graph grafo);
 
 
 };
