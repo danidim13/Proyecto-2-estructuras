@@ -77,7 +77,7 @@ class GeneticSolver {
 
 		std::vector<Genoma> getSuperiores() const;
 
-		/**
+		/** 
 		 * FIXME no me acuerdo que hace getGenCounter
 		 */
 
@@ -107,6 +107,12 @@ class GeneticSolver {
 		 */
 		int randPos(size_t size);
 
+		/**
+		 * Esta función retorna un tamaño aleatorio de gen valido
+		 * @return [2, m_grafo->order()]
+		 */
+		int randSize();
+
 	private:
 
 		Graph *m_grafo; /**<Puntero hacia el grafo por resolver.*/
@@ -123,6 +129,8 @@ class GeneticSolver {
 
 		// Distribución para vertices
 		std::uniform_int_distribution<int> vertexDist;
+		// Distribución para tamaños
+		std::uniform_int_distribution<int> sizeDist;
 
 		bool esSolucion(const std::vector<int> &genoma, const Graph &grafo)const; /**<Determina si un genoma es solucion del grafo.*/
 		double sumarTrayectorias(const std::vector<int> &genoma, const Graph &grafo)const; /**<Suma los pesos entre vertices de un genoma.*/

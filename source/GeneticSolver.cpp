@@ -5,7 +5,8 @@ GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, G
 	m_grafo(grafo), m_crossover(p_crossover),
 	m_mutaciones(p_mutaciones), m_gen_limit(gen_limit),
 	Rng(std::chrono::system_clock::now().time_since_epoch().count()),
-	vertexDist(1, grafo->order() - 2)
+	vertexDist(1, grafo->order() - 2),
+	sizeDist(2, grafo->order())
 {
 
 }
@@ -40,6 +41,11 @@ int GeneticSolver::randPos(size_t size)
 {
 	std::uniform_int_distribution<int> dist(1, size-2);
 	return dist(Rng);
+}
+
+int GeneticSolver::ranSize()
+{
+	return sizeDist(Rng);
 }
 
 bool GeneticSolver::esSolucion(std::vector<int> genoma, Graph grafo){
