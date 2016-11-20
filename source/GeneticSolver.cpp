@@ -166,7 +166,12 @@ void GeneticSolver::primeraGeneracion()
 	// eliminar las que no son soluciones.
 	
 	for (auto it = genepool.begin(); it != genepool.end(); ) {
-		it = esSolucion(it->genes,*m_grafo) ? ++it : genepool.erase(it);
+		if (esSolucion(it->genes,*m_grafo)){
+			it->peso_total = sumarTrayectorias(it->genes,*m_grafo);
+			it++;
+		} else {
+			it = genepool.erase(it);
+		}
 	}
 }
 
