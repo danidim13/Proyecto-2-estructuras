@@ -31,18 +31,21 @@ int main(int argc, char* argv[]) {
 	*/
 
 	
-	cout << "Grafo" << endl;
-	Graph g(5000);
+	Graph g(20);
 
 	double r;
 	for (int i = 1; i < g.order(); i++) {
 		for (int j = 0; j < i; j++) {
 			r = ((double) rand() / (RAND_MAX));
-			g.addEdgeBidir(i,j,r*100);
+			(i-j <= g.order()/1.5) ? g.addEdgeBidir(i,j,r*100) : 0 ;
 		}
 	}
+	double v = g.order();
+	double e = g.size();
+	double D = e/(v*(v-1));
 
-	// g.print();
+	cout << "Grafo con densidad " << D << endl;
+	g.print();
 	GeneticSolver s(5,5,5,&g);
 
 	/* Probar esSolucion
