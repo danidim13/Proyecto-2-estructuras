@@ -88,7 +88,7 @@ class GeneticSolver {
 		 * @return Genoma el mejor de los individuos del genepool/solucion optima
 		 */
 
-		Genoma solve(); // Daniel
+		void solve(); // Daniel
 
 		/**
 		 * Esta función retorna un vertice aleatorio que no
@@ -113,7 +113,7 @@ class GeneticSolver {
 		 */
 		int randSize();
 
-	private:
+	//private:
 
 		Graph *m_grafo; /**<Puntero hacia el grafo por resolver.*/
 		int m_crossover; /**<Numero de crossovers por realizar en el proceso de evolucion.*/
@@ -132,8 +132,8 @@ class GeneticSolver {
 		// Distribución para tamaños
 		std::uniform_int_distribution<int> sizeDist;
 
-		bool esSolucion(const std::vector<int> &genoma, const Graph &grafo)const; /**<Determina si un genoma es solucion del grafo.*/
-		double sumarTrayectorias(const std::vector<int> &genoma, const Graph &grafo)const; /**<Suma los pesos entre vertices de un genoma.*/
+		bool esSolucion(const std::vector<int> &genoma, const Graph &grafo); /**<Determina si un genoma es solucion del grafo.*/
+		double sumarTrayectorias(const std::vector<int> &genoma, const Graph &grafo); /**<Suma los pesos entre vertices de un genoma.*/
 
 };
 
