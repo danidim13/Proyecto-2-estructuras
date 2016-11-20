@@ -76,7 +76,7 @@ void GeneticSolver::primeraGeneracion()
 	max_pool_size = 20;
 #endif
 
-	// Luego se debe llenar el pool.
+   	//Luego se debe llenar el pool.
 	genepool.clear();
 
 	// El maximo tamaño de una solución es n.
@@ -85,9 +85,10 @@ void GeneticSolver::primeraGeneracion()
 
 	// Un mapa de int,bool para 'tachar'
 	//std::map<int,bool> CheckList;
-	std::unordered_map<int,bool> CheckList(n);
-	for (int i=1; i < n-1; i++){
-		CheckList.emplace(i,false);
+	//std::unordered_map<int,bool> CheckList(n);
+	bool CheckList[n];
+	for (int i=0; i < n; i++){
+		CheckList[i] = false;
 	}
 
 	for (int i = 0; i < max_pool_size; i++) {
@@ -129,7 +130,9 @@ void GeneticSolver::primeraGeneracion()
 	// Una vez que se genero el pool inicial se deben
 	// eliminar las que no son soluciones.
 	
-	//for (int 
+	for (auto it = genepool.begin(); it != genepool.end(); ) {
+		it = esSolucion(it->genes,*m_grafo) ? ++it : genepool.erase(it);
+	}
 }
 
 void GeneticSolver::siguienteGeneracion(){}
