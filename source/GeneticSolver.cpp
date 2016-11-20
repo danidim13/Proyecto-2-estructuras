@@ -3,6 +3,8 @@
 #include <chrono> 
 #include <utility>
 #include <iostream>
+#include <map>
+#include <unordered_map>
 
 GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, Graph *grafo):
 	m_grafo(grafo), m_crossover(p_crossover),
@@ -66,7 +68,7 @@ void GeneticSolver::primeraGeneracion()
 #if defined POOL_LINEAL
 	max_pool_size = n;
 #elif defined POOL_LOGRAIZ
-	max_pool_size = (size_t)(std::sqrt(n)*std::log2(n+1));
+	max_pool_size = (size_t)(std::sqrt(n)*std::log2(n/2+1));
 #elif defined POOL_RAIZ
 	max_pool_size = (size_t)(std::sqrt(n));
 #else 
@@ -81,17 +83,42 @@ void GeneticSolver::primeraGeneracion()
 	Genoma tmp;
 	tmp.genes.reserve(n);
 
+	// Un mapa de int,bool para 'tachar'
+	//std::map<int,bool> CheckList;
+	std::unordered_map<int,bool> CheckList(n);
+	for (int i=1; i < n-1; i++){
+		CheckList.emplace(i,false);
+	}
+
 	for (int i = 0; i < max_pool_size; i++) {
 
-		/* Se genera una posible solución de manera
-		 * aleatoria. No se verifica si hay repetidos.
-		 */
 		int next_size = randSize();
 		tmp.genes.push_back(0);
+		
+#if defined NO_CHECK_DUPLICATES
+		// Generacion aleatoria pura
 		for (int i = 1; i < next_size - 1; i++) {
 			tmp.genes.push_back(randVert());
 		}
+#else
+		// Generacion aleatoria comprobando con el checklist
+		for (int i = 1; i < next_size - 1; i++) {
+			int v;
+			do {
+				v = randVert();
+			} while (CheckList[v]);
+			CheckList[v] = true;
+
+			tmp.genes.push_back(v);
+		}
+		// Se resetea el checklist
+		for (int i=1; i < n-1; i++){
+			CheckList[i] = false;
+		}
+#endif
+
 		tmp.genes.push_back(n-1);
+
 
 		// Luego esta se agrega al genepool.
 		genepool.push_back(std::move(tmp));
@@ -100,6 +127,9 @@ void GeneticSolver::primeraGeneracion()
 	}
 
 	// Una vez que se genero el pool inicial se deben
+	// eliminar las que no son soluciones.
+	
+	//for (int 
 }
 
 void GeneticSolver::siguienteGeneracion(){}
@@ -108,7 +138,7 @@ void GeneticSolver::siguienteGeneracion(){}
 
 //int GeneticSolver::getGenCounter() const{}
 
-Genoma GeneticSolver::solve(){}
+void GeneticSolver::solve(){}
 
 int GeneticSolver::randVert()
 {
@@ -127,26 +157,28 @@ int GeneticSolver::randSize()
 }
 
 bool GeneticSolver::esSolucion(const std::vector<int> &genes, const Graph &grafo) const{
-		if(genes.size() != 0){
-  			if(genes[0] == 0 && genes[genes.size() - 1] == grafo.order() -1){
-        		if(std::isfinite(sumarTrayectorias(genes,grafo)) )
-          		return true;
+	if(genes[0] == 0 && genes[genes.size() - 1] == grafo.order() -1){
 
-        		else
-          		return false;
-      }
-     else
-       return false;
-  	 } else std::cerr << "Error: genes vacios" << std::endl;
+		for(size_t i = 0; i < genes.size() - 1; i++){
+			if ( !grafo.isEdge(genes[i], genes[i+1]) ) {
+				std::cout << "No hay link de " << genes[i] << " a " << genes[i+1] << std::endl;
+				return false;
+			}
+		}
+		return true;
+
+	} else {
+		return false;
+	}
 }
 
 
 double GeneticSolver::sumarTrayectorias(const std::vector<int> &genes, const Graph &grafo)const{
 
-    double suma_pesos = 0;
+	double suma_pesos = 0;
 
-    for(size_t i = 0; i < genes.size() - 1; i++){
-      suma_pesos = suma_pesos + grafo.getEdge(genes[i], genes[i+1]);
-    }
-    return suma_pesos;
+	for(size_t i = 0; i < genes.size() - 1; i++){
+		suma_pesos = suma_pesos + grafo.getEdge(genes[i], genes[i+1]);
+	}
+	return suma_pesos;
 }
