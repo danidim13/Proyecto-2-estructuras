@@ -2,6 +2,7 @@
 #include <limits>
 #include <cmath>
 #include <iostream>
+#include <iomanip>
 
 typedef std::numeric_limits<double> D;
 
@@ -102,9 +103,13 @@ int Graph::size() const
 
 void Graph::print() const
 {
+
 	for (auto it1 = adjMatrix.begin(); it1 != adjMatrix.end(); it1++) {
 		for (auto it2 = it1->begin(); it2 != it1->end(); it2++) {
-			std::cout << *it2 << " ";
+			std::cout << std::setprecision(3)
+						<< std::setfill(' ')
+						<< std::setw(4)
+						<< *it2 << " ";
 		}
 		std::cout << std::endl;
 	}
