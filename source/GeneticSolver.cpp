@@ -21,8 +21,43 @@ GeneticSolver::~GeneticSolver()
 
 }
 
-//Genoma GeneticSolver::crossover(Genoma g1, Genoma g2) const{}
-;
+Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
+{
+	Genoma nuevo;
+
+	// Se elige un vertice al azar del gen1
+	int pos_cruzar1 = randPos(g1.genes.size());
+	int v1 = g1.genes[pos_cruzar1];
+
+	int tries = 0;
+	do {
+		// Primer intento, se recorre gen2 en busca de ese mismo vertice
+		int pos_cruzar2 = 0;
+		bool v_comun = false;
+		while (pos_cruzar2 < g2.genes.size() && !v_comun) {
+			if (g2.genes[pos_cruzar2] == v1)
+				v_comun = true;
+			else
+				pos_cruzar2++;
+		}
+
+		if (v_comun) {
+			nuevo.genes.reserve(pos_cruzar1 + g2.genes.size() - pos_cruzar2);
+			for (int i = 0; i < pos_cruzar1; i++) {
+				nuevo.genes.push_back(g1.genes[i]);
+			}
+			for (int i = pos_cruzar2; i < g2.genes.size(); i++) {
+				nuevo.genes.push_back(g2.genes[i]);
+			}
+			nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
+			return nuevo;
+		}
+		tries++;
+	} while (tries < 6);
+	std::cout << "I gave up!" << std::endl;
+	return g1;
+}
+
 Genoma GeneticSolver::mutacion(const Genoma &g){
 	if(esSolucion(g.genes,*m_grafo)){
 		Genoma g_mutado = g;

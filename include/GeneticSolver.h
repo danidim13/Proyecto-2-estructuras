@@ -41,7 +41,7 @@ class GeneticSolver {
 		 * @param g1 El primer genoma
 		 * @param g2 El segundo genoma
 		 */
-		Genoma crossover(Genoma g1, Genoma g2) const; // Daniel
+		Genoma crossover(const Genoma &g1, const Genoma &g2); // Daniel
 
 		/**
 		 * Toma un genoma y devuelve una mutacion aleatoria del mismo
