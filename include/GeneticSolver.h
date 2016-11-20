@@ -48,11 +48,11 @@ class GeneticSolver {
 		 * @return Genoma la mutacion del g
 		 * @param g Genoma por mutar
 		 */
-		Genoma mutacion(Genoma g) const; // Luis
+		Genoma mutacion(const Genoma &g); // Luis
 
 		/**
-		 * FIXME no me acuerdo que hace seleccionNatural
-		 *
+		 * Seleccion natural toma los mejores individuos
+		 * del genepool y los agrega  a la lsita de superiores
 		 */
 
 		void seleccionNatural(); // Luis
@@ -77,7 +77,7 @@ class GeneticSolver {
 
 		std::vector<Genoma> getSuperiores() const;
 
-		/** 
+		/**
 		 * FIXME no me acuerdo que hace getGenCounter
 		 */
 
@@ -132,8 +132,8 @@ class GeneticSolver {
 		// Distribución para tamaños
 		std::uniform_int_distribution<int> sizeDist;
 
-		bool esSolucion(const std::vector<int> &genoma, const Graph &grafo); /**<Determina si un genoma es solucion del grafo.*/
-		double sumarTrayectorias(const std::vector<int> &genoma, const Graph &grafo); /**<Suma los pesos entre vertices de un genoma.*/
+		bool esSolucion(const std::vector<int> &genoma, const Graph &grafo)const; /**<Determina si un genoma es solucion del grafo.*/
+		double sumarTrayectorias(const std::vector<int> &genes, const Graph &grafo)const; /**<Suma los pesos entre vertices de un genoma.*/
 
 };
 

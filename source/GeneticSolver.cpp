@@ -2,6 +2,7 @@
 #include <cmath>
 #include <chrono> 
 #include <utility>
+#include <iostream>
 
 GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, Graph *grafo):
 	m_grafo(grafo), m_crossover(p_crossover),
@@ -20,7 +21,30 @@ GeneticSolver::~GeneticSolver()
 
 //Genoma GeneticSolver::crossover(Genoma g1, Genoma g2) const{}
 ;
-//Genoma GeneticSolver::mutacion(Genoma g) const {}
+Genoma GeneticSolver::mutacion(const Genoma &g){
+	if(esSolucion(g.genes,*m_grafo)){
+		Genoma g_mutado = g;
+
+		int iter = 0;
+		int orig;
+		int i;
+		do {
+			i = randPos(g_mutado.genes.size());
+			orig = g.genes[i];
+			g_mutado.genes[i] = randVert();
+			iter ++;
+		} while ( orig == g_mutado.genes[i] && !esSolucion(g_mutado.genes, *m_grafo) && iter < 5);
+
+		return g_mutado;
+
+	}
+
+	else{
+		std::cerr << "El genoma a mutar no es solucion" << std::endl;
+		return Genoma();
+	}
+
+}
 
 void GeneticSolver::seleccionNatural(){}
 
@@ -84,7 +108,7 @@ void GeneticSolver::siguienteGeneracion(){}
 
 //int GeneticSolver::getGenCounter() const{}
 
-void GeneticSolver::solve(){}
+Genoma GeneticSolver::solve(){}
 
 int GeneticSolver::randVert()
 {
@@ -102,27 +126,27 @@ int GeneticSolver::randSize()
 	return sizeDist(Rng);
 }
 
-bool GeneticSolver::esSolucion(const std::vector<int> &genoma, const Graph &grafo){
+bool GeneticSolver::esSolucion(const std::vector<int> &genes, const Graph &grafo) const{
+		if(genes.size() != 0){
+  			if(genes[0] == 0 && genes[genes.size() - 1] == grafo.order() -1){
+        		if(std::isfinite(sumarTrayectorias(genes,grafo)) )
+          		return true;
 
-  if(genoma[0] == 0 && genoma[genoma.size() - 1] == grafo.order() -1 ){
-
-      if(std::isfinite(sumarTrayectorias(genoma,grafo)) )
-        return true;
-
-      else
-        return false;
-   }
-   else
-    return false;
+        		else
+          		return false;
+      }
+     else
+       return false;
+  	 } else std::cerr << "Error: genes vacios" << std::endl;
 }
 
-double GeneticSolver::sumarTrayectorias(const std::vector<int> &genoma, const Graph &grafo){
+
+double GeneticSolver::sumarTrayectorias(const std::vector<int> &genes, const Graph &grafo)const{
 
     double suma_pesos = 0;
 
-    for(size_t i = 0; i < genoma.size(); i++){
-      suma_pesos = suma_pesos + grafo.getEdge(genoma[i], genoma[i+1]);
+    for(size_t i = 0; i < genes.size() - 1; i++){
+      suma_pesos = suma_pesos + grafo.getEdge(genes[i], genes[i+1]);
     }
     return suma_pesos;
 }
-
