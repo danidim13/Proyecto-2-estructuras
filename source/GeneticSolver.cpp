@@ -30,6 +30,12 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 	size_t pos_cruzar1;
 	size_t pos_cruzar2;
 
+	/*
+	if (g1.genes.size() == 2 || g2.genes.size() == 2){
+		return (g1.total_size < g2.total_size) ? g1 : g2;
+	}
+	*/
+
 	// La primera forma de hacer crossover es elegir un vertice al azar
 	// en g1 y buscarlo en g2, si se encuentra entonces combinar ambos
 	// genes en ese punto.
@@ -224,6 +230,8 @@ int GeneticSolver::randVert()
 
 size_t GeneticSolver::randPos(size_t size)
 {
+	if (size == 2)
+		return 1;
 	std::uniform_int_distribution<size_t> dist(1, size-2);
 	return dist(Rng);
 }
