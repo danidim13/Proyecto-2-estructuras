@@ -57,8 +57,8 @@ Recordar meter >> `typedef std::vector<vertex> Genoma` (pero esto iría en la cl
 - [x] Validar implementación. __13/11__
 - [ ] Hacer Makefile con targets: all, clean, tests, run
 - [ ] Documentar funciones a implementar.
-- [ ] Implementar Constructor.
-- [ ] Implementar `primeraGeneracion()`.
+- [x] Implementar Constructor. __18/11__
+- [x] Implementar `primeraGeneracion()`. __20/11__
 - [ ] Implementar `Crossover()`.
 - [ ] Implementar `Solve()`.
 
@@ -67,8 +67,8 @@ Recordar meter >> `typedef std::vector<vertex> Genoma` (pero esto iría en la cl
 - [x] Implementar método `esSolucion()`. __13/11__
 - [x] Implementar método `sumarTrayectorias()`. __13/11__
 - [x] Validar implementación. __13/11__
-- [ ] Documentar funciones a implementar.
-- [ ] Implementar `Mutacion()`.
+- [x] Documentar funciones a implementar. __15/11__
+- [x] Implementar `Mutacion()`. __18/11__
 - [ ] Implementar `SiguienteGeneracion()`.
 - [ ] Implementar `SeleccionNatural()`.
 
