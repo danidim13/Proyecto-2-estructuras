@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
 	*/
 
-	
+
 	Graph g(20);
 
 	double r;
@@ -95,14 +95,14 @@ int main(int argc, char* argv[]) {
 
 	*/
 
-	
+
 	/*
 	cout << "Vertices aleatorios" << endl;
 	for (int i = 0; i < 20; i++) {
 		cout << s.randVert() << endl;
 	}
 	cout << endl;
-	
+
 	cout << "Posiciones aleatorias size = 10" << endl;
 	for (int i = 0; i < 20; i++) {
 		cout << s.randPos(10) << endl;
@@ -121,6 +121,12 @@ int main(int argc, char* argv[]) {
 	}
 	cout << "Fin!" << endl;
 	cout << s.genepool.size() << " vectores generados" << endl;
+
+std::cout << "****************************************" << std::endl;
+
+	s.seleccionNatural(); 
+
+
 
 	return 0;
 }

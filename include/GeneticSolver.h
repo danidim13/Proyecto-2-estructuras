@@ -51,6 +51,13 @@ class GeneticSolver {
 		Genoma mutacion(const Genoma &g); // Luis
 
 		/**
+		 * minWeight devuelve el genoma con menor peso_total de todo el genepool
+		 * @return min El genoma de minimo peso
+		 */
+
+		Genoma minWeight(std::list<Genoma> &genepool);
+
+		/**
 		 * Seleccion natural toma los mejores individuos
 		 * del genepool y los agrega  a la lsita de superiores
 		 */
