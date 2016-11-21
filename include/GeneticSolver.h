@@ -105,7 +105,7 @@ class GeneticSolver {
 		 * @param size Tamaño del vector.
 		 * @return Indíce dentro del rango [1, size-2].
 		 */
-		int randPos(size_t size);
+		size_t randPos(size_t size);
 
 		/**
 		 * Esta función retorna un tamaño aleatorio de gen valido
@@ -134,6 +134,8 @@ class GeneticSolver {
 
 		bool esSolucion(const std::vector<int> &genoma, const Graph &grafo)const; /**<Determina si un genoma es solucion del grafo.*/
 		double sumarTrayectorias(const std::vector<int> &genes, const Graph &grafo)const; /**<Suma los pesos entre vertices de un genoma.*/
+
+		double density;
 
 };
 

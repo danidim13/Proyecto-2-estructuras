@@ -13,7 +13,10 @@ GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, G
 	vertexDist(1, grafo->order() - 2),
 	sizeDist(2, grafo->order())
 {
-
+	double e, v;
+	e = grafo->size();
+	v = grafo->order();
+	density = e/(v*(v-1));
 }
 
 GeneticSolver::~GeneticSolver()
@@ -24,36 +27,67 @@ GeneticSolver::~GeneticSolver()
 Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 {
 	Genoma nuevo;
+	size_t pos_cruzar1;
+	size_t pos_cruzar2;
 
-	// Se elige un vertice al azar del gen1
-	int pos_cruzar1 = randPos(g1.genes.size());
-	int v1 = g1.genes[pos_cruzar1];
-
+	// La primera forma de hacer crossover es elegir un vertice al azar
+	// en g1 y buscarlo en g2, si se encuentra entonces combinar ambos
+	// genes en ese punto.
+	
 	int tries = 0;
-	do {
-		// Primer intento, se recorre gen2 en busca de ese mismo vertice
-		int pos_cruzar2 = 0;
-		bool v_comun = false;
+	bool v_comun = false;
+	while (tries < 6 && !v_comun) {
+
+		// Se elige un vertice al azar del gen1
+		pos_cruzar1 = randPos(g1.genes.size());
+		int v1 = g1.genes[pos_cruzar1];
+		pos_cruzar2 = 0;
 		while (pos_cruzar2 < g2.genes.size() && !v_comun) {
 			if (g2.genes[pos_cruzar2] == v1)
 				v_comun = true;
 			else
 				pos_cruzar2++;
 		}
-
-		if (v_comun) {
-			nuevo.genes.reserve(pos_cruzar1 + g2.genes.size() - pos_cruzar2);
-			for (int i = 0; i < pos_cruzar1; i++) {
-				nuevo.genes.push_back(g1.genes[i]);
-			}
-			for (int i = pos_cruzar2; i < g2.genes.size(); i++) {
-				nuevo.genes.push_back(g2.genes[i]);
-			}
-			nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
-			return nuevo;
-		}
 		tries++;
-	} while (tries < 6);
+	} 
+	if (!v_comun)
+		std::cout << "No common vertex..." << std::endl;
+
+	// Si la primera forma falla se intenta otra manera, se eligen dos posiciones al azar
+	// de ambos genes y se determina si existe un arco entre ambos, en cuyo caso
+	
+	tries = 0;
+	while (tries < 6 && !v_comun) {
+		pos_cruzar1 = randPos(g1.genes.size());
+		pos_cruzar2 = randPos(g2.genes.size());
+
+		if (m_grafo->isEdge(g1.genes[pos_cruzar1], g2.genes[pos_cruzar2]))
+			v_comun = true;
+		else
+			tries++;
+	} 
+	if (!v_comun)
+		std::cout << "No common edge..." << std::endl;
+
+	// Una vez se probaron ambas formas se verifica si se encontró un cruce válido.
+	if (v_comun) {
+
+		g1.genes[pos_cruzar1] != g2.genes[pos_cruzar2] ? pos_cruzar1++ : 0;
+		nuevo.genes.reserve(pos_cruzar1 + g2.genes.size() - pos_cruzar2);
+
+		for (size_t i = 0; i < pos_cruzar1; i++) {
+			nuevo.genes.push_back(g1.genes[i]);
+		}
+
+		for (size_t i = pos_cruzar2; i < g2.genes.size(); i++) {
+			nuevo.genes.push_back(g2.genes[i]);
+		}
+
+		nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
+		return nuevo;
+	}
+
+	// Si aún así no se encontró un cruce válido entonces se retorna el genoma 1.
 	std::cout << "I gave up!" << std::endl;
 	return g1;
 }
@@ -64,7 +98,7 @@ Genoma GeneticSolver::mutacion(const Genoma &g){
 
 		int iter = 0;
 		int orig;
-		int i;
+		size_t i;
 		do {
 			i = randPos(g_mutado.genes.size());
 			orig = g.genes[i];
@@ -188,9 +222,9 @@ int GeneticSolver::randVert()
 	return vertexDist(Rng);
 }
 
-int GeneticSolver::randPos(size_t size)
+size_t GeneticSolver::randPos(size_t size)
 {
-	std::uniform_int_distribution<int> dist(1, size-2);
+	std::uniform_int_distribution<size_t> dist(1, size-2);
 	return dist(Rng);
 }
 
@@ -204,7 +238,7 @@ bool GeneticSolver::esSolucion(const std::vector<int> &genes, const Graph &grafo
 
 		for(size_t i = 0; i < genes.size() - 1; i++){
 			if ( !grafo.isEdge(genes[i], genes[i+1]) ) {
-				std::cout << "No hay link de " << genes[i] << " a " << genes[i+1] << std::endl;
+				//std::cout << "No hay link de " << genes[i] << " a " << genes[i+1] << std::endl;
 				return false;
 			}
 		}
