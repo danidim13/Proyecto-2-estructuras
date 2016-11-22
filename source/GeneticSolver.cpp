@@ -17,6 +17,7 @@ GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, G
 	e = grafo->size();
 	v = grafo->order();
 	density = e/(v*(v-1));
+	std::cout << "Creando GeneticSolver con " << m_gen_limit << " generaciones" << std::endl;
 }
 
 GeneticSolver::~GeneticSolver()

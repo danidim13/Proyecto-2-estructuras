@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 	*/
 
 
-	Graph g(20);
+	Graph g(35);
 
 	double r;
 	for (int i = 1; i < g.order(); i++) {
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "Con un peso total de: " << s.genetic_solution.peso_total << std::endl;
 
-	GeneticSolver s2(5,5,5,&g);
+	GeneticSolver s2(5,5,10,&g);
 
 	std::cout << "Resolviendo grafo con mas generaciones" << std::endl;
 
