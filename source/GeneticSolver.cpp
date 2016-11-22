@@ -57,7 +57,7 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 		tries++;
 	}
 	if (!v_comun)
-		std::cout << "No common vertex..." << std::endl;
+		//std::cout << "No common vertex..." << std::endl;
 
 	// Si la primera forma falla se intenta otra manera, se eligen dos posiciones al azar
 	// de ambos genes y se determina si existe un arco entre ambos, en cuyo caso
@@ -246,6 +246,9 @@ void GeneticSolver::siguienteGeneracion(){
 	auto it_s_1 = superiores.begin();
 	auto it_s_2 = superiores.begin();
 	it_s_2 ++;
+
+	genepool.push_back(*it_s_1);
+	genepool.push_back(*it_s_2);
 
 	for(int i = 0; i<m_crossover ; i++){
 

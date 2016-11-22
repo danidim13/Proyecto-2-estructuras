@@ -67,6 +67,26 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "Con un peso total de: " << s.genetic_solution.peso_total << std::endl;
 
+	GeneticSolver s2(5,5,5,&g);
+
+	std::cout << "Resolviendo grafo con mas generaciones" << std::endl;
+
+	s2.solve();
+
+	std::cout << "Asignando solucion" << std::endl;
+
+	std::vector<int> solution2 = s2.genetic_solution.genes;
+
+	std::cout << "El camino mas corto es:" << std::endl;
+
+	for(auto it2 = solution2.begin(); it2 != solution2.end(); it2++){
+		std::cout << *it2 << " ";
+	}
+
+	std::cout << std::endl;
+
+	std::cout << "Con un peso total de: " << s2.genetic_solution.peso_total << std::endl;
+
 
 	/* Probar esSolucion
 	g.addEdgeBidir(0,14,100);
