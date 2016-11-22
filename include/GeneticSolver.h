@@ -130,6 +130,8 @@ class GeneticSolver {
 		std::list<Genoma> genepool; /**<Genepool: poblacion de genomas que son solucion del grafo.*/
 		std::list<Genoma> superiores; /**<Individuos del genepool con el minimo peso de todos.*/
 
+		Genoma genetic_solution; /**< La solucion optima encontrada.*/
+
 		// Miembros para la generacion aleatoria
 		// Un generador
 		std::mt19937 Rng;

@@ -55,11 +55,11 @@ Recordar meter >> `typedef std::vector<vertex> Genoma` (pero esto iría en la cl
 - [x] Implementar métodos para comprobar la existencia de una arista entre dos nodos y obtener su peso, `isEdge()` y `getEdge()`. __11/11__
 - [x] Implementar métodos de información: número de vértices/aristas, imprimir. __10/11__
 - [x] Validar implementación. __13/11__
-- [ ] Hacer Makefile con targets: all, clean, tests, run
-- [ ] Documentar funciones a implementar.
+- [x] Hacer Makefile con targets: all, clean, tests, run
+- [x] Documentar funciones a implementar.
 - [x] Implementar Constructor. __18/11__
 - [x] Implementar `primeraGeneracion()`. __20/11__
-- [ ] Implementar `Crossover()`.
+- [x] Implementar `Crossover()`.
 - [ ] Implementar `Solve()`.
 
 ### Luis
@@ -69,8 +69,8 @@ Recordar meter >> `typedef std::vector<vertex> Genoma` (pero esto iría en la cl
 - [x] Validar implementación. __13/11__
 - [x] Documentar funciones a implementar. __15/11__
 - [x] Implementar `Mutacion()`. __18/11__
-- [ ] Implementar `SiguienteGeneracion()`.
-- [ ] Implementar `SeleccionNatural()`.
+- [x] Implementar `SiguienteGeneracion()`.
+- [x] Implementar `SeleccionNatural()`. __21/11__
 
 
 ### Sin asignar

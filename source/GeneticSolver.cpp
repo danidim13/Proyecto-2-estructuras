@@ -123,7 +123,7 @@ Genoma GeneticSolver::mutacion(const Genoma &g){
 
 }
 
-Genoma minWeight(std::list<Genoma> &genepool){
+Genoma GeneticSolver::minWeight(std::list<Genoma> &genepool){
 
 	Genoma min;
 	auto it_min = genepool.begin();
@@ -143,9 +143,7 @@ void GeneticSolver::seleccionNatural(){
 	int n_superiores = 2;
 
 	for(int i = 0; i< n_superiores; i++){
-		std::cout << "Añadiendo mínimo" << std::endl;
 		superiores.push_back(minWeight(genepool));
-		std::cout << superiores.size() << std::endl;
 
 	}
 }
@@ -154,6 +152,7 @@ void GeneticSolver::primeraGeneracion()
 {
 
 	genepool.clear();
+
 	/* Se debe definir el tamaño del pool inicial, se agregarán un cierto número de posibles soluciones
 	 * generadas de manera aleatoria, luego para cada una de estas se comprobará si es una solución
 	 * real. El tamaño de este conjunto debe ser lo suficientemente grande para encontrar varias soluciones
@@ -240,13 +239,54 @@ void GeneticSolver::primeraGeneracion()
 	}
 }
 
-void GeneticSolver::siguienteGeneracion(){}
+void GeneticSolver::siguienteGeneracion(){
+
+	genepool.clear();
+
+	auto it_s_1 = superiores.begin();
+	auto it_s_2 = superiores.begin();
+	it_s_2 ++;
+
+	for(int i = 0; i<m_crossover ; i++){
+
+		genepool.push_back(crossover(*it_s_1, *it_s_2));
+
+	}
+
+	for(int i = 0; i<m_mutaciones; i++ ){
+		if(i%2 == 0)
+			genepool.push_back(mutacion(*it_s_1));
+		else
+			genepool.push_back(mutacion(*it_s_2));
+	}
+	// tomar los elementos de superiores
+	// mutarlos mediante mutacion
+	//mutarlos mediante crossover
+	//llenar el genepool tamaño genepool.size() + superiores.size()
+	return;
+}
 
 //std::vector<Genoma> GeneticSolver::getSuperiores() const{}
 
 //int GeneticSolver::getGenCounter() const{}
 
-void GeneticSolver::solve(){}
+void GeneticSolver::solve(){
+
+	primeraGeneracion();
+
+	for(int i = 0; i < m_gen_limit; i++){
+
+		seleccionNatural();
+		siguienteGeneracion();
+
+	}
+
+	seleccionNatural();
+
+	genetic_solution = minWeight(superiores);
+	return;
+
+}
 
 int GeneticSolver::randVert()
 {
