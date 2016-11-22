@@ -8,6 +8,8 @@
 
 using namespace std;
 
+void print(Genoma g);
+
 int main(int argc, char* argv[]) {
 	/*
 	unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
@@ -31,15 +33,18 @@ int main(int argc, char* argv[]) {
 	*/
 
 	
-	Graph g(20);
+	Graph g(10);
 
+	//
 	double r;
 	for (int i = 1; i < g.order(); i++) {
 		for (int j = 0; j < i; j++) {
 			r = ((double) rand() / (RAND_MAX));
-			(i-j <= g.order()/1.5) ? g.addEdgeBidir(i,j,r*100) : 0 ;
+			(i-j <= (g.order()-2)) ? g.addEdgeBidir(i,j,r*100) : 0 ;
 		}
 	}
+	//
+
 	double v = g.order();
 	double e = g.size();
 	double D = e/(v*(v-1));
@@ -110,17 +115,57 @@ int main(int argc, char* argv[]) {
 	cout << endl;
 	*/
 
+	//
+	//
+	cout << endl;
 	cout << "Intento de primera generacion" << endl;
 	s.primeraGeneracion();
 
 	for (auto it = s.genepool.begin(); it != s.genepool.end(); it++) {
-		for (auto it2 = it->genes.begin(); it2 != it->genes.end(); it2++) {
-		cout << *it2 << " ";
-		}
-		cout << endl;
+		print(*it);
 	}
 	cout << "Fin!" << endl;
 	cout << s.genepool.size() << " vectores generados" << endl;
+	//
+
+
+	cout << endl;
+	cout << "Crossover 1-1" << endl;
+	for (auto it = s.genepool.begin(); it != s.genepool.end(); it++) {
+		if (++it != s.genepool.end())
+			print(s.crossover(*it,*it--));
+		else
+			it--;
+	}
+	//
+
+
+	/*
+	// Crossover predefinidas
+	Genoma g0,g1,g2,g3, n0,n1,n2,n3;
+	g0.genes = {0,7,8,3,4,5,9};
+	g1.genes = {0,4,2,9};
+	g2.genes = {0,2,3,4,5,6,9};
+	g3.genes = {0,6,5,4,3,2,9};
+	cout << "Crossover g0 y v1" << endl;
+
+	n0 = s.crossover(g0,g1);
+	n1 = s.crossover(g1,g0);
+	n2 = s.crossover(g2,g3);
+	n3 = s.crossover(g3,g2);
+
+	print(n0);
+	print(n1);
+	print(n2);
+	print(n3);
+	*/
 
 	return 0;
+}
+
+void print(Genoma g) {
+	for (int i = 0; i < g.genes.size(); i++) {
+		std::cout << g.genes[i] << " ";
+	}
+	std::cout << "\tpeso: " << g.peso_total << endl;
 }
