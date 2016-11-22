@@ -113,6 +113,7 @@ Genoma GeneticSolver::mutacion(const Genoma &g){
 			iter ++;
 		} while ( orig == g_mutado.genes[i] && !esSolucion(g_mutado.genes, *m_grafo) && iter < 5);
 
+		g_mutado.peso_total = sumarTrayectorias(g_mutado.genes, *m_grafo);
 		return g_mutado;
 
 	}
@@ -130,7 +131,7 @@ Genoma GeneticSolver::minWeight(std::list<Genoma> &genepool){
 	auto it_min = genepool.begin();
 
 	for(auto it = genepool.begin(); it != genepool.end(); it++){
-			if((*it).peso_total < (*it_min).peso_total){
+			if( (it->peso_total) < (it_min->peso_total) ){
 				it_min = it;
 			}
 
@@ -142,10 +143,18 @@ Genoma GeneticSolver::minWeight(std::list<Genoma> &genepool){
 
 void GeneticSolver::seleccionNatural(){
 	int n_superiores = 2;
+	superiores.clear();
 
-	for(int i = 0; i< n_superiores; i++){
-		superiores.push_back(minWeight(genepool));
-
+	superiores.push_back(minWeight(genepool));
+	auto it = superiores.begin();
+	
+	for(int i = 1; i < n_superiores; ){
+		Genoma g = minWeight(genepool);
+		if (g.genes != it->genes) {
+			superiores.push_back(g);
+			it++;
+			i++;
+		}
 	}
 }
 
@@ -253,7 +262,10 @@ void GeneticSolver::siguienteGeneracion(){
 
 	for(int i = 0; i<m_crossover ; i++){
 
-		genepool.push_back(crossover(*it_s_1, *it_s_2));
+		if (i%2 == 0)
+			genepool.push_back(crossover(*it_s_1, *it_s_2));
+		else
+			genepool.push_back(crossover(*it_s_2, *it_s_1));
 
 	}
 
@@ -274,14 +286,36 @@ void GeneticSolver::siguienteGeneracion(){
 
 //int GeneticSolver::getGenCounter() const{}
 
+void print(Genoma g) {
+	for (int i = 0; i < g.genes.size(); i++) {
+		std::cout << g.genes[i] << " ";
+	}
+	std::cout << "\tpeso: " << g.peso_total << std::endl;
+}
+
 void GeneticSolver::solve(){
 
 	primeraGeneracion();
+
+	std::cout << std::endl;
+	std::cout << "Generacion inicial :" << std::endl << std::endl;
+	for (auto it = genepool.begin(); it != genepool.end(); it++) {
+		print(*it);
+	}
+	std::cout << std::endl;
+
 
 	for(int i = 0; i < m_gen_limit; i++){
 
 		seleccionNatural();
 		siguienteGeneracion();
+
+		std::cout << std::endl;
+		std::cout << "Generacion " << i << std::endl << std::endl;
+		for (auto it = genepool.begin(); it != genepool.end(); it++) {
+			print(*it);
+		}
+		std::cout << std::endl;
 
 	}
 
