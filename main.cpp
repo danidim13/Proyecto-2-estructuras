@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
 
 	*/
 
-	
-	Graph g(10);
+
+	Graph g(35);
 
 	//
 	double r;
@@ -51,7 +51,47 @@ int main(int argc, char* argv[]) {
 
 	cout << "Grafo con densidad " << D << endl;
 	g.print();
+
 	GeneticSolver s(5,5,5,&g);
+
+	std::cout << "Resolviendo grafo" << std::endl;
+
+	s.solve();
+
+	std::cout << "Asignando solucion" << std::endl;
+
+	std::vector<int> solution = s.genetic_solution.genes;
+
+	std::cout << "El camino mas corto es:" << std::endl;
+
+	for(auto it = solution.begin(); it != solution.end(); it++){
+		std::cout << *it << " ";
+	}
+
+	std::cout << std::endl;
+
+	std::cout << "Con un peso total de: " << s.genetic_solution.peso_total << std::endl;
+
+	GeneticSolver s2(5,5,10,&g);
+
+	std::cout << "Resolviendo grafo con mas generaciones" << std::endl;
+
+	s2.solve();
+
+	std::cout << "Asignando solucion" << std::endl;
+
+	std::vector<int> solution2 = s2.genetic_solution.genes;
+
+	std::cout << "El camino mas corto es:" << std::endl;
+
+	for(auto it2 = solution2.begin(); it2 != solution2.end(); it2++){
+		std::cout << *it2 << " ";
+	}
+
+	std::cout << std::endl;
+
+	std::cout << "Con un peso total de: " << s2.genetic_solution.peso_total << std::endl;
+
 
 	/* Probar esSolucion
 	g.addEdgeBidir(0,14,100);
@@ -100,14 +140,14 @@ int main(int argc, char* argv[]) {
 
 	*/
 
-	
+
 	/*
 	cout << "Vertices aleatorios" << endl;
 	for (int i = 0; i < 20; i++) {
 		cout << s.randVert() << endl;
 	}
 	cout << endl;
-	
+
 	cout << "Posiciones aleatorias size = 10" << endl;
 	for (int i = 0; i < 20; i++) {
 		cout << s.randPos(10) << endl;
@@ -128,6 +168,24 @@ int main(int argc, char* argv[]) {
 	cout << s.genepool.size() << " vectores generados" << endl;
 	//
 
+// std::cout << "****************************************" << std::endl;
+// 	std::cout << "Llamando a seleccion natural" << std::endl;
+//
+// 	s.seleccionNatural();
+//
+// 	std::cout << "Creando Siguiente Generacion" << std::endl;
+//
+// 	s.siguienteGeneracion();
+//
+//
+// 	std::cout << "Nuevo genepool" << std::endl;
+//
+// 	for (auto it = s.genepool.begin(); it != s.genepool.end(); it++) {
+// 		for (auto it2 = it->genes.begin(); it2 != it->genes.end(); it2++) {
+// 		cout << *it2 << " ";
+// 		}
+// 		cout << endl;
+// 	}
 
 	cout << endl;
 	cout << "Crossover 1-1" << endl;

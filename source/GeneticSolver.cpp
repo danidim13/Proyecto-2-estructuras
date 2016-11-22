@@ -1,6 +1,6 @@
 #include "GeneticSolver.h"
 #include <cmath>
-#include <chrono> 
+#include <chrono>
 #include <utility>
 #include <iostream>
 #include <map>
@@ -17,6 +17,7 @@ GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, G
 	e = grafo->size();
 	v = grafo->order();
 	density = e/(v*(v-1));
+	std::cout << "Creando GeneticSolver con " << m_gen_limit << " generaciones" << std::endl;
 }
 
 GeneticSolver::~GeneticSolver()
@@ -39,7 +40,7 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 	// La primera forma de hacer crossover es elegir un vertice al azar
 	// en g1 y buscarlo en g2, si se encuentra entonces combinar ambos
 	// genes en ese punto.
-	
+
 	int tries = 0;
 	bool v_comun = false;
 	while (tries < 6 && !v_comun) {
@@ -55,13 +56,13 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 				pos_cruzar2++;
 		}
 		tries++;
-	} 
+	}
 	if (!v_comun)
-		std::cout << "No common vertex..." << std::endl;
+		//std::cout << "No common vertex..." << std::endl;
 
 	// Si la primera forma falla se intenta otra manera, se eligen dos posiciones al azar
 	// de ambos genes y se determina si existe un arco entre ambos, en cuyo caso
-	
+
 	tries = 0;
 	while (tries < 6 && !v_comun) {
 		pos_cruzar1 = randPos(g1.genes.size());
@@ -71,7 +72,7 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 			v_comun = true;
 		else
 			tries++;
-	} 
+	}
 	if (!v_comun)
 		std::cout << "No common edge..." << std::endl;
 
@@ -123,12 +124,36 @@ Genoma GeneticSolver::mutacion(const Genoma &g){
 
 }
 
-void GeneticSolver::seleccionNatural(){}
+Genoma GeneticSolver::minWeight(std::list<Genoma> &genepool){
+
+	Genoma min;
+	auto it_min = genepool.begin();
+
+	for(auto it = genepool.begin(); it != genepool.end(); it++){
+			if((*it).peso_total < (*it_min).peso_total){
+				it_min = it;
+			}
+
+	}
+		min = *it_min;
+		genepool.erase(it_min);
+		return min;
+}
+
+void GeneticSolver::seleccionNatural(){
+	int n_superiores = 2;
+
+	for(int i = 0; i< n_superiores; i++){
+		superiores.push_back(minWeight(genepool));
+
+	}
+}
 
 void GeneticSolver::primeraGeneracion()
 {
 
 	genepool.clear();
+
 	/* Se debe definir el tamaño del pool inicial, se agregarán un cierto número de posibles soluciones
 	 * generadas de manera aleatoria, luego para cada una de estas se comprobará si es una solución
 	 * real. El tamaño de este conjunto debe ser lo suficientemente grande para encontrar varias soluciones
@@ -146,7 +171,7 @@ void GeneticSolver::primeraGeneracion()
 	max_pool_size = (size_t)(std::sqrt(n)*std::log2(n/2+1));
 #elif defined POOL_RAIZ
 	max_pool_size = (size_t)(std::sqrt(n));
-#else 
+#else
 	// Caso por defecto
 	max_pool_size = 20;
 #endif
@@ -170,7 +195,7 @@ void GeneticSolver::primeraGeneracion()
 
 		int next_size = randSize();
 		tmp.genes.push_back(0);
-		
+
 #if defined NO_CHECK_DUPLICATES
 		// Generacion aleatoria pura
 		for (int i = 1; i < next_size - 1; i++) {
@@ -204,7 +229,7 @@ void GeneticSolver::primeraGeneracion()
 
 	// Una vez que se genero el pool inicial se deben
 	// eliminar las que no son soluciones.
-	
+
 	for (auto it = genepool.begin(); it != genepool.end(); ) {
 		if (esSolucion(it->genes,*m_grafo)){
 			it->peso_total = sumarTrayectorias(it->genes,*m_grafo);
@@ -215,13 +240,57 @@ void GeneticSolver::primeraGeneracion()
 	}
 }
 
-void GeneticSolver::siguienteGeneracion(){}
+void GeneticSolver::siguienteGeneracion(){
+
+	genepool.clear();
+
+	auto it_s_1 = superiores.begin();
+	auto it_s_2 = superiores.begin();
+	it_s_2 ++;
+
+	genepool.push_back(*it_s_1);
+	genepool.push_back(*it_s_2);
+
+	for(int i = 0; i<m_crossover ; i++){
+
+		genepool.push_back(crossover(*it_s_1, *it_s_2));
+
+	}
+
+	for(int i = 0; i<m_mutaciones; i++ ){
+		if(i%2 == 0)
+			genepool.push_back(mutacion(*it_s_1));
+		else
+			genepool.push_back(mutacion(*it_s_2));
+	}
+	// tomar los elementos de superiores
+	// mutarlos mediante mutacion
+	//mutarlos mediante crossover
+	//llenar el genepool tamaño genepool.size() + superiores.size()
+	return;
+}
 
 //std::vector<Genoma> GeneticSolver::getSuperiores() const{}
 
 //int GeneticSolver::getGenCounter() const{}
 
-void GeneticSolver::solve(){}
+void GeneticSolver::solve(){
+
+	primeraGeneracion();
+
+	for(int i = 0; i < m_gen_limit; i++){
+
+		seleccionNatural();
+		siguienteGeneracion();
+
+	}
+
+	seleccionNatural();
+
+	genetic_solution = minWeight(superiores);
+	return;
+
+}
 
 int GeneticSolver::randVert()
 {
