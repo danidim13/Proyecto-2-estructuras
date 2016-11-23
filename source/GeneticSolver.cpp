@@ -9,6 +9,7 @@
 GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, Graph *grafo):
 	m_grafo(grafo), m_crossover(p_crossover),
 	m_mutaciones(p_mutaciones), m_gen_limit(gen_limit),
+	superiores(4),
 	Rng(std::chrono::system_clock::now().time_since_epoch().count()),
 	vertexDist(1, grafo->order() - 2),
 	sizeDist(2, grafo->order())
@@ -17,6 +18,7 @@ GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, G
 	e = grafo->size();
 	v = grafo->order();
 	density = e/(v*(v-1));
+	cant_superiores = 4;
 	std::cout << "Creando GeneticSolver con " << m_gen_limit << " generaciones" << std::endl;
 }
 
@@ -46,9 +48,9 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 	while (tries < 6 && !v_comun) {
 
 		// Se elige un vertice al azar del gen1
-		pos_cruzar1 = randPos(g1.genes.size());
+		pos_cruzar1 = randPosCross(g1.genes.size());
 		int v1 = g1.genes[pos_cruzar1];
-		pos_cruzar2 = 0;
+		pos_cruzar2 = 1;
 		while (pos_cruzar2 < g2.genes.size() && !v_comun) {
 			if (g2.genes[pos_cruzar2] == v1)
 				v_comun = true;
@@ -58,15 +60,15 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 		tries++;
 	}
 	if (!v_comun)
-		//std::cout << "No common vertex..." << std::endl;
+		std::cerr << "No common vertex..." << std::endl;
 
 	// Si la primera forma falla se intenta otra manera, se eligen dos posiciones al azar
 	// de ambos genes y se determina si existe un arco entre ambos, en cuyo caso
 
 	tries = 0;
 	while (tries < 6 && !v_comun) {
-		pos_cruzar1 = randPos(g1.genes.size());
-		pos_cruzar2 = randPos(g2.genes.size());
+		pos_cruzar1 = randPosCross(g1.genes.size());
+		pos_cruzar2 = 1 + randPosCross(g2.genes.size());
 
 		if (m_grafo->isEdge(g1.genes[pos_cruzar1], g2.genes[pos_cruzar2]))
 			v_comun = true;
@@ -74,7 +76,7 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 			tries++;
 	}
 	if (!v_comun)
-		std::cout << "No common edge..." << std::endl;
+		std::cerr << "No common edge..." << std::endl;
 
 	// Una vez se probaron ambas formas se verifica si se encontró un cruce válido.
 	if (v_comun) {
@@ -101,6 +103,11 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 
 Genoma GeneticSolver::mutacion(const Genoma &g){
 	if(esSolucion(g.genes,*m_grafo)){
+		if (g.genes.size() == 2) {
+			std::cerr << "Genoma inmutable" << std::endl;
+			return g;
+		}
+			
 		Genoma g_mutado = g;
 
 		int iter = 0;
@@ -120,41 +127,137 @@ Genoma GeneticSolver::mutacion(const Genoma &g){
 
 	else{
 		std::cerr << "El genoma a mutar no es solucion" << std::endl;
-		return Genoma();
+		return g;
 	}
 
 }
 
-Genoma GeneticSolver::minWeight(std::list<Genoma> &genepool){
-
-	Genoma min;
-	auto it_min = genepool.begin();
-
-	for(auto it = genepool.begin(); it != genepool.end(); it++){
-			if( (it->peso_total) < (it_min->peso_total) ){
-				it_min = it;
-			}
-
-	}
-		min = *it_min;
-		genepool.erase(it_min);
-		return min;
-}
-
-void GeneticSolver::seleccionNatural(){
-	int n_superiores = 2;
-	superiores.clear();
-
-	superiores.push_back(minWeight(genepool));
-	auto it = superiores.begin();
+Genoma GeneticSolver::indel(const Genoma &g)
+{
+	bool in = false;
+	int tries;
+	bool valid;
 	
-	for(int i = 1; i < n_superiores; ){
-		Genoma g = minWeight(genepool);
-		if (g.genes != it->genes) {
-			superiores.push_back(g);
-			it++;
-			i++;
+	// Si es de tamaño 2 a huevo es una inserción.
+	if (g.genes.size() == 2)
+		in = true;
+	else
+		in = (randVert()%2 == 0);
+
+
+	// Lógica de inserción
+	if (in) {
+		// Posición despues de la cual insertar
+		size_t pos_in = randPosCross(g.genes.size());
+
+
+		// Vertice a insertar
+		int v;
+		valid = false;
+		tries = 0;
+		while (!valid && tries < 6) {
+			v = randVert();
+			if (v != g.genes[pos_in] && v != g.genes[pos_in+1]) {
+				if ( m_grafo->isEdge(g.genes[pos_in], v) && m_grafo->isEdge(v, g.genes[pos_in+1]) )
+					valid = true;
+			}
+			else
+				++tries;
 		}
+
+		if (valid) {
+			Genoma nuevo;
+			for (size_t i = 0; i < g.genes.size(); i++) {
+				nuevo.genes.push_back(g.genes[i]);
+				if (i == pos_in) {
+					nuevo.genes.push_back(v);
+				}
+			}
+			nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
+			return nuevo;
+		} else {
+			std::cerr << "Couldn't insert..." << std::endl;
+			return g;
+		}
+	}
+
+	// Logica de borrado
+	if (!in) {
+		size_t pos_del;
+
+		valid = false;
+		tries = 0;
+		while (!valid && tries < 6) {
+			pos_del = randPos(g.genes.size());
+			if ( m_grafo->isEdge(g.genes[pos_del-1], g.genes[pos_del+1]) )
+				valid = true;
+			else
+				++tries;
+		}
+
+		if (valid) {
+			Genoma nuevo;
+			for (size_t i = 0; i < g.genes.size(); i++) {
+				if (i != pos_del)
+					nuevo.genes.push_back(g.genes[i]);
+			}
+			nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
+			return nuevo;
+		} else {
+			std::cerr << "Couldn't delete..." << std::endl;
+			return g;
+		}
+	}
+
+	std::cerr << "WTF en indel!" << std::endl;
+	return g;
+}
+
+Genoma GeneticSolver::specialIndel(const Genoma &g1, const Genoma &g2)
+{
+	size_t g1_size = g1.genes.size();
+	size_t g2_size = g2.genes.size();
+
+	
+	if ( g1.genes[g1_size-2] == g2.genes[1] ) {
+		std::cerr << "Las colas son iguales -_-" << std::endl;
+		return g1;
+	}
+		
+	// Vertice a insertar
+	int v;
+	bool valid = false;
+	int tries = 0;
+	while (!valid && tries < 6) {
+		v = randVert();
+
+		// El vertice tiene que ser diferente de los extremos
+		if ( v != g1.genes[g1_size-2] && v!= g2.genes[1] ) {
+			if ( m_grafo->isEdge(g1.genes[g1_size-2], v) && m_grafo->isEdge(v, g2.genes[1]) )
+				valid = true;
+		}
+		else
+			++tries;
+	}
+
+	if (valid) {
+		Genoma nuevo;
+
+		for (size_t i = 0; i < g1_size-1; i++) {
+			nuevo.genes.push_back(g1.genes[i]);
+		}
+
+		nuevo.genes.push_back(v);
+
+		for (size_t i = 1; i < g2_size; i++) {
+			nuevo.genes.push_back(g2.genes[i]);
+		}
+
+		nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
+		return nuevo;
+	} else {
+		std::cerr << "Couldn't special INDEL..." << std::endl;
+		return g1;
 	}
 }
 
@@ -249,36 +352,76 @@ void GeneticSolver::primeraGeneracion()
 	}
 }
 
+Genoma GeneticSolver::minWeight(std::list<Genoma> &genepool){
+
+	Genoma min;
+	auto it_min = genepool.begin();
+
+	for(auto it = genepool.begin(); it != genepool.end(); it++){
+			if( (it->peso_total) < (it_min->peso_total) ){
+				it_min = it;
+			}
+
+	}
+		min = *it_min;
+		genepool.erase(it_min);
+		return min;
+}
+
+void GeneticSolver::seleccionNatural(){
+
+	superiores[0] = minWeight(genepool);
+	
+	for(int i = 1; i < cant_superiores && !genepool.empty(); ){
+		Genoma g = minWeight(genepool);
+		if (g.peso_total != superiores[i-1].peso_total) {
+			superiores[i] = g;
+			i++;
+		}
+	}
+}
+
 void GeneticSolver::siguienteGeneracion(){
 
+	// Primero se limpia el genepool
 	genepool.clear();
 
-	auto it_s_1 = superiores.begin();
-	auto it_s_2 = superiores.begin();
-	it_s_2 ++;
+	// Agregar superiores
+	for (int i = 0; i < cant_superiores; i++) {
+		genepool.push_back(superiores[i]);
+	}
 
-	genepool.push_back(*it_s_1);
-	genepool.push_back(*it_s_2);
-
+	// Crossover
 	for(int i = 0; i<m_crossover ; i++){
 
-		if (i%2 == 0)
-			genepool.push_back(crossover(*it_s_1, *it_s_2));
-		else
-			genepool.push_back(crossover(*it_s_2, *it_s_1));
-
+		genepool.push_back( crossover(
+				superiores[i%cant_superiores],
+				superiores[(i+1)%cant_superiores]) );
 	}
 
+	// Mutaciones
 	for(int i = 0; i<m_mutaciones; i++ ){
-		if(i%2 == 0)
-			genepool.push_back(mutacion(*it_s_1));
-		else
-			genepool.push_back(mutacion(*it_s_2));
+		genepool.push_back(
+				mutacion(superiores[i%cant_superiores]));
 	}
-	// tomar los elementos de superiores
-	// mutarlos mediante mutacion
-	//mutarlos mediante crossover
-	//llenar el genepool tamaño genepool.size() + superiores.size()
+
+	
+	// Special Indel
+	for(int i = 0; i<m_mutaciones; i++ ){
+
+		genepool.push_back( specialIndel(
+				superiores[i%cant_superiores],
+				superiores[(i+1)%cant_superiores]) );
+	}
+
+	// Indel
+	for(int i = 0; i<m_mutaciones; i++ ){
+
+		genepool.push_back( indel(
+				superiores[i%cant_superiores]));
+	}
+	
+
 	return;
 }
 
@@ -287,7 +430,7 @@ void GeneticSolver::siguienteGeneracion(){
 //int GeneticSolver::getGenCounter() const{}
 
 void print(Genoma g) {
-	for (int i = 0; i < g.genes.size(); i++) {
+	for (size_t i = 0; i < g.genes.size(); i++) {
 		std::cout << g.genes[i] << " ";
 	}
 	std::cout << "\tpeso: " << g.peso_total << std::endl;
@@ -321,7 +464,7 @@ void GeneticSolver::solve(){
 
 	seleccionNatural();
 
-	genetic_solution = minWeight(superiores);
+	genetic_solution = *superiores.begin();
 	return;
 
 }
@@ -329,6 +472,14 @@ void GeneticSolver::solve(){
 int GeneticSolver::randVert()
 {
 	return vertexDist(Rng);
+}
+
+size_t GeneticSolver::randPosCross(size_t size)
+{
+	//if (size == 2)
+		//return 0;
+	std::uniform_int_distribution<size_t> dist(0, size-2);
+	return dist(Rng);
 }
 
 size_t GeneticSolver::randPos(size_t size)

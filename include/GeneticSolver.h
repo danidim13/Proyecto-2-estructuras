@@ -55,6 +55,10 @@ class GeneticSolver {
 		 * @return min El genoma de minimo peso
 		 */
 
+		Genoma indel(const Genoma &g);
+
+		Genoma specialIndel(const Genoma &g1, const Genoma &g2);
+
 		Genoma minWeight(std::list<Genoma> &genepool);
 
 		/**
@@ -115,6 +119,12 @@ class GeneticSolver {
 		size_t randPos(size_t size);
 
 		/**
+		 * Igual que randPos, pero puede retornar la primera.
+		 * [0, size-2]
+		 */
+		size_t randPosCross(size_t size);
+
+		/**
 		 * Esta función retorna un tamaño aleatorio de gen valido
 		 * @return [2, m_grafo->order()]
 		 */
@@ -128,7 +138,7 @@ class GeneticSolver {
 		int m_gen_limit; /**<Numero de generaciones por evolucionar antes de devolver la solucion optima.*/
 
 		std::list<Genoma> genepool; /**<Genepool: poblacion de genomas que son solucion del grafo.*/
-		std::list<Genoma> superiores; /**<Individuos del genepool con el minimo peso de todos.*/
+		std::vector<Genoma> superiores; /**<Individuos del genepool con el minimo peso de todos.*/
 
 		Genoma genetic_solution; /**< La solucion optima encontrada.*/
 
@@ -145,6 +155,7 @@ class GeneticSolver {
 		double sumarTrayectorias(const std::vector<int> &genes, const Graph &grafo)const; /**<Suma los pesos entre vertices de un genoma.*/
 
 		double density;
+		int cant_superiores;
 
 };
 
