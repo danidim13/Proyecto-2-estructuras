@@ -27,7 +27,7 @@ class GeneticSolver {
 		 * y un parametro gen_limit para terminar de iterar despues de un cierto numero de generaciones
 		 */
 
-		GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, Graph *grafo); // Daniel
+		GeneticSolver(int p_crossover, int p_mutaciones, int p_indel, int p_indelS, int gen_limit, int p_pool, Graph *grafo); // Daniel
 
 		/**
 		 * Destructor
@@ -135,6 +135,8 @@ class GeneticSolver {
 		Graph *m_grafo; /**<Puntero hacia el grafo por resolver.*/
 		int m_crossover; /**<Numero de crossovers por realizar en el proceso de evolucion.*/
 		int m_mutaciones; /**<Numero de mutaciones por realizar en el proceso de evolucion.*/
+		int m_indel; /**<Numero de InDels por realizar en el proceso de evolucion.*/
+		int m_indelS; /**<Numero de InDels especiales por realizar en el proceso de evolucion.*/
 		int m_gen_limit; /**<Numero de generaciones por evolucionar antes de devolver la solucion optima.*/
 
 		std::list<Genoma> genepool; /**<Genepool: poblacion de genomas que son solucion del grafo.*/

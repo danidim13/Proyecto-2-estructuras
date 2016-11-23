@@ -6,10 +6,14 @@
 #include <map>
 #include <unordered_map>
 
-GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, Graph *grafo):
-	m_grafo(grafo), m_crossover(p_crossover),
-	m_mutaciones(p_mutaciones), m_gen_limit(gen_limit),
-	superiores(4),
+GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int p_indel, int p_indelS, int gen_limit, int p_pool, Graph *grafo):
+	m_grafo(grafo),
+	m_crossover(p_crossover),
+	m_mutaciones(p_mutaciones),
+	m_indel(p_indel),
+	m_indelS(p_indelS),
+	m_gen_limit(gen_limit),
+	superiores(p_pool),
 	Rng(std::chrono::system_clock::now().time_since_epoch().count()),
 	vertexDist(1, grafo->order() - 2),
 	sizeDist(2, grafo->order())
@@ -18,7 +22,7 @@ GeneticSolver::GeneticSolver(int p_crossover, int p_mutaciones, int gen_limit, G
 	e = grafo->size();
 	v = grafo->order();
 	density = e/(v*(v-1));
-	cant_superiores = 4;
+	cant_superiores = p_pool;
 	std::cout << "Creando GeneticSolver con " << m_gen_limit << " generaciones" << std::endl;
 }
 
