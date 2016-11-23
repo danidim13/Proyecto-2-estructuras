@@ -64,7 +64,7 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 		tries++;
 	}
 	if (!v_comun)
-		std::cerr << "No common vertex..." << std::endl;
+		//std::cerr << "No common vertex..." << std::endl;
 
 	// Si la primera forma falla se intenta otra manera, se eligen dos posiciones al azar
 	// de ambos genes y se determina si existe un arco entre ambos, en cuyo caso
@@ -80,7 +80,7 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 			tries++;
 	}
 	if (!v_comun)
-		std::cerr << "No common edge..." << std::endl;
+		//std::cerr << "No common edge..." << std::endl;
 
 	// Una vez se probaron ambas formas se verifica si se encontró un cruce válido.
 	if (v_comun) {
@@ -101,14 +101,14 @@ Genoma GeneticSolver::crossover(const Genoma &g1, const Genoma &g2)
 	}
 
 	// Si aún así no se encontró un cruce válido entonces se retorna el genoma 1.
-	std::cout << "I gave up!" << std::endl;
+	//std::cout << "I gave up!" << std::endl;
 	return g1;
 }
 
 Genoma GeneticSolver::mutacion(const Genoma &g){
 	if(esSolucion(g.genes,*m_grafo)){
 		if (g.genes.size() == 2) {
-			std::cerr << "Genoma inmutable" << std::endl;
+			//std::cerr << "Genoma inmutable" << std::endl;
 			return g;
 		}
 			
@@ -130,7 +130,7 @@ Genoma GeneticSolver::mutacion(const Genoma &g){
 	}
 
 	else{
-		std::cerr << "El genoma a mutar no es solucion" << std::endl;
+		//std::cerr << "El genoma a mutar no es solucion" << std::endl;
 		return g;
 	}
 
@@ -180,7 +180,7 @@ Genoma GeneticSolver::indel(const Genoma &g)
 			nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
 			return nuevo;
 		} else {
-			std::cerr << "Couldn't insert..." << std::endl;
+			//std::cerr << "Couldn't insert..." << std::endl;
 			return g;
 		}
 	}
@@ -208,7 +208,7 @@ Genoma GeneticSolver::indel(const Genoma &g)
 			nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
 			return nuevo;
 		} else {
-			std::cerr << "Couldn't delete..." << std::endl;
+			//std::cerr << "Couldn't delete..." << std::endl;
 			return g;
 		}
 	}
@@ -224,7 +224,7 @@ Genoma GeneticSolver::specialIndel(const Genoma &g1, const Genoma &g2)
 
 	
 	if ( g1.genes[g1_size-2] == g2.genes[1] ) {
-		std::cerr << "Las colas son iguales -_-" << std::endl;
+		//std::cerr << "Las colas son iguales -_-" << std::endl;
 		return g1;
 	}
 		
@@ -260,7 +260,7 @@ Genoma GeneticSolver::specialIndel(const Genoma &g1, const Genoma &g2)
 		nuevo.peso_total = sumarTrayectorias(nuevo.genes, *m_grafo);
 		return nuevo;
 	} else {
-		std::cerr << "Couldn't special INDEL..." << std::endl;
+		//std::cerr << "Couldn't special INDEL..." << std::endl;
 		return g1;
 	}
 }
@@ -444,13 +444,17 @@ void GeneticSolver::solve(){
 
 	primeraGeneracion();
 
+	/*
 	std::cout << std::endl;
 	std::cout << "Generacion inicial :" << std::endl << std::endl;
 	for (auto it = genepool.begin(); it != genepool.end(); it++) {
 		print(*it);
 	}
 	std::cout << std::endl;
+	*/
 
+	// Condicion de salida: n generaciones sin cambio
+	//
 	Genoma mejor_prev, peor_prev;
 	int stasis = 0;
 	int i = 0;
@@ -461,12 +465,15 @@ void GeneticSolver::solve(){
 		mejor_prev = superiores[0];
 		peor_prev = superiores[cant_superiores-1];
 		siguienteGeneracion();
+
+		/*
 		std::cout << std::endl;
 		std::cout << "Generacion " << i << std::endl << std::endl;
 		for (auto it = genepool.begin(); it != genepool.end(); it++) {
 			print(*it);
 		}
 		std::cout << std::endl;
+		*/
 
 		seleccionNatural();
 		if (mejor_prev.peso_total == superiores[0].peso_total && peor_prev.peso_total == superiores[cant_superiores-1].peso_total)
@@ -475,20 +482,24 @@ void GeneticSolver::solve(){
 			stasis = 0;
 		i++;
 	}
+	//
 
 
+	// Condición de salida: n generaciones totales
 	/*
 	for(int i = 0; i < m_gen_limit; i++){
 
 		seleccionNatural();
 		siguienteGeneracion();
 
+		//
 		std::cout << std::endl;
 		std::cout << "Generacion " << i << std::endl << std::endl;
 		for (auto it = genepool.begin(); it != genepool.end(); it++) {
 			print(*it);
 		}
 		std::cout << std::endl;
+		//
 
 	}
 
