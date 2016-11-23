@@ -411,7 +411,7 @@ void GeneticSolver::siguienteGeneracion(){
 
 	
 	// Special Indel
-	for(int i = 0; i<m_mutaciones; i++ ){
+	for(int i = 0; i<m_indelS; i++ ){
 
 		genepool.push_back( specialIndel(
 				superiores[i%cant_superiores],
@@ -419,7 +419,7 @@ void GeneticSolver::siguienteGeneracion(){
 	}
 
 	// Indel
-	for(int i = 0; i<m_mutaciones; i++ ){
+	for(int i = 0; i<m_indel; i++ ){
 
 		genepool.push_back( indel(
 				superiores[i%cant_superiores]));
@@ -451,7 +451,33 @@ void GeneticSolver::solve(){
 	}
 	std::cout << std::endl;
 
+	Genoma mejor_prev, peor_prev;
+	int stasis = 0;
+	int i = 0;
 
+	seleccionNatural();
+
+	while (stasis < m_gen_limit) {
+		mejor_prev = superiores[0];
+		peor_prev = superiores[cant_superiores-1];
+		siguienteGeneracion();
+		std::cout << std::endl;
+		std::cout << "Generacion " << i << std::endl << std::endl;
+		for (auto it = genepool.begin(); it != genepool.end(); it++) {
+			print(*it);
+		}
+		std::cout << std::endl;
+
+		seleccionNatural();
+		if (mejor_prev.peso_total == superiores[0].peso_total && peor_prev.peso_total == superiores[cant_superiores-1].peso_total)
+			stasis++;
+		else
+			stasis = 0;
+		i++;
+	}
+
+
+	/*
 	for(int i = 0; i < m_gen_limit; i++){
 
 		seleccionNatural();
@@ -467,8 +493,9 @@ void GeneticSolver::solve(){
 	}
 
 	seleccionNatural();
+	*/
 
-	genetic_solution = *superiores.begin();
+	genetic_solution = superiores[0];
 	return;
 
 }

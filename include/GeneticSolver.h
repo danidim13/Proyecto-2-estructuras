@@ -63,9 +63,8 @@ class GeneticSolver {
 
 		/**
 		 * Seleccion natural toma los mejores individuos
-		 * del genepool y los agrega  a la lsita de superiores
+		 * del genepool y los agrega  a la lista de superiores
 		 */
-
 		void seleccionNatural(); // Luis
 
 		/**
